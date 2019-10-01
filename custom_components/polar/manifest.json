@@ -1,0 +1,9 @@
+{
+  "domain": "polar",
+  "name": "Polar",
+  "config_flow": true,
+  "documentation": "https://github.com/burnnat/ha-polar",
+  "dependencies": [],
+  "codeowners": [],
+  "requirements": ["polar_accesslink==0.0.4"]
+}

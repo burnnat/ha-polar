@@ -1,0 +1,19 @@
+{
+  "config": {
+    "title": "Polar",
+    "step": {
+      "client": {
+        "title": "Client",
+        "description": "Client...",
+        "data": {}
+      },
+      "oauth": {
+        "title": "OAuth",
+        "description": "OAuth...",
+        "data": {}
+      }
+    },
+    "error": {},
+    "abort": {}
+  }
+}
