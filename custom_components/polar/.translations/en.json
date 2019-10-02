@@ -3,13 +3,16 @@
     "title": "Polar",
     "step": {
       "client": {
-        "title": "Client",
-        "description": "Client...",
-        "data": {}
+        "title": "Polar Client",
+        "description": "Enter your Polar Accesslink client ID and secret. If you have not registered your client yet, please visit https://admin.polaraccesslink.com/ to do so.",
+        "data": {
+          "client_id": "Client ID",
+          "client_secret": "Client secret"
+        }
       },
       "oauth": {
-        "title": "OAuth",
-        "description": "OAuth...",
+        "title": "Polar Authorization",
+        "description": "Login with your Polar credentials to authorize access to your Polar account.",
         "data": {}
       }
     },

@@ -26,8 +26,6 @@ async def async_setup(hass, config):
     """Set up the Polar component."""
     conf = config.get(DOMAIN)
 
-    _LOGGER.debug('Setting up Polar component with config data: ' + str(conf))
-
     hass.data[DOMAIN] = conf or {}
 
     if conf is not None:

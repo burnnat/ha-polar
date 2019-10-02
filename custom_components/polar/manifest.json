@@ -5,5 +5,5 @@
   "documentation": "https://github.com/burnnat/ha-polar",
   "dependencies": [],
   "codeowners": [],
-  "requirements": ["polar_accesslink==0.0.4"]
+  "requirements": ["polar_accesslink==0.0.5"]
 }

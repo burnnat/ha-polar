@@ -1,6 +1,8 @@
 """Config flow for Polar Flow."""
 import logging
 
+from collections import OrderedDict
+
 import aiohttp
 import requests
 import voluptuous as vol
@@ -42,17 +44,17 @@ class PolarConfigFlow(config_entries.ConfigFlow):
         if not self.accesslink_client:
             self.accesslink_client = AccessLink(
                 client_id=self.data['client_id'],
-                client_secret=self.data['client_secret'])
+                client_secret=self.data['client_secret'],
                 redirect_url=callback_url)
 
         return self.accesslink_client
 
     async def async_step_user(self, user_input=None):
-        _LOGGER.debug('Starting user config flow: ' + str(user_input))
+        _LOGGER.debug('Starting user config flow')
         return await self.async_step_client(user_input)
 
     async def async_step_import(self, user_input=None):
-        _LOGGER.debug('Starting import config flow: ' + str(user_input))
+        _LOGGER.debug('Starting import config flow')
         return await self.async_step_client(user_input)
 
     async def async_step_client(self, user_input=None):
