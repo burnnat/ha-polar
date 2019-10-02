@@ -4,7 +4,7 @@
     "step": {
       "client": {
         "title": "Polar Client",
-        "description": "Enter your Polar Accesslink client ID and secret. If you have not registered your client yet, please visit https://admin.polaraccesslink.com/ to do so.",
+        "description": "Enter your Polar Accesslink client ID and secret. If you have not registered your client yet, please visit the [admin dashboard](https://admin.polaraccesslink.com/) to do so. Enter `{callback_url}` as your callback domain and enable access to all data types.",
         "data": {
           "client_id": "Client ID",
           "client_secret": "Client secret"

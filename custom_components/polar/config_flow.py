@@ -69,8 +69,13 @@ class PolarConfigFlow(config_entries.ConfigFlow):
         data_schema[vol.Required('client_id')] = str
         data_schema[vol.Required('client_secret')] = str
 
+        callback_url = setup_oauth_callback(self.hass)
+
         return self.async_show_form(
             step_id='client',
+            description_placeholders={
+                'callback_url': callback_url
+            },
             data_schema=vol.Schema(data_schema)
         )
 
