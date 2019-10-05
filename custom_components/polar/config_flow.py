@@ -14,7 +14,8 @@ from homeassistant.components.http import HomeAssistantView
 
 from accesslink import AccessLink
 
-from .const import DOMAIN, AUTH_CALLBACK_NAME, AUTH_CALLBACK_PATH
+from .const import DOMAIN, CONF_CLIENT_ID, CONF_CLIENT_SECRET, CONF_USER_ID,
+    CONF_ACCESS_TOKEN, AUTH_CALLBACK_NAME, AUTH_CALLBACK_PATH
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -43,8 +44,8 @@ class PolarConfigFlow(config_entries.ConfigFlow):
 
         if not self.accesslink_client:
             self.accesslink_client = AccessLink(
-                client_id=self.data['client_id'],
-                client_secret=self.data['client_secret'],
+                client_id=self.data[CONF_CLIENT_ID],
+                client_secret=self.data[CONF_CLIENT_SECRET],
                 redirect_url=callback_url)
 
         return self.accesslink_client
@@ -60,14 +61,14 @@ class PolarConfigFlow(config_entries.ConfigFlow):
     async def async_step_client(self, user_input=None):
         if user_input is not None:
             self.data = {
-                'client_id': user_input['client_id'],
-                'client_secret': user_input['client_secret']}
+                CONF_CLIENT_ID: user_input[CONF_CLIENT_ID],
+                CONF_CLIENT_SECRET: user_input[CONF_CLIENT_SECRET]}
             
             return await self.async_step_oauth()
 
         data_schema = OrderedDict()
-        data_schema[vol.Required('client_id')] = str
-        data_schema[vol.Required('client_secret')] = str
+        data_schema[vol.Required(CONF_CLIENT_ID)] = str
+        data_schema[vol.Required(CONF_CLIENT_SECRET)] = str
 
         callback_url = setup_oauth_callback(self.hass)
 
@@ -88,8 +89,8 @@ class PolarConfigFlow(config_entries.ConfigFlow):
 
         token_response = self.accesslink.get_access_token(user_input['code'])
 
-        self.data['user_id'] = token_response['x_user_id']
-        self.data['access_token'] = token_response['access_token']
+        self.data[CONF_USER_ID] = token_response['x_user_id']
+        self.data[CONF_ACCESS_TOKEN] = token_response['access_token']
 
         return self.async_external_step_done(next_step_id='finish')
 
@@ -97,7 +98,7 @@ class PolarConfigFlow(config_entries.ConfigFlow):
         data = user_input or self.data or {}
 
         try:
-            self.accesslink.users.register(access_token=data['access_token'])
+            self.accesslink.users.register(access_token=data[CONF_ACCESS_TOKEN])
         except requests.exceptions.HTTPError as err:
             # Error 409 Conflict means that the user has already been registered for this client, which is okay.
             if err.response.status_code != 409:
