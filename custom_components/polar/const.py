@@ -12,26 +12,6 @@ CONF_PHYSICAL_INFO = 'physical_info'
 AUTH_CALLBACK_NAME = "api:polar_auth"
 AUTH_CALLBACK_PATH = "/api/polar_auth"
 
-ENDPOINTS = {
-    CONF_DAILY_ACTIVITY: PolarEndpoint(
-        'daily_activity',
-        'activity-log',
-        'created',
-        'list_activities',
-        'get_activity_summary'),
-    CONF_TRAINING_DATA: PolarEndpoint(
-        'training_data',
-        'exercises',
-        'start-time',
-        'list_exercises',
-        'get_exercise_summary'),
-    CONF_PHYSICAL_INFO: PolarEndpoint(
-        'physical_info',
-        'physical-informations',
-        'created',
-        'list_physical_infos',
-        'get_physical_info')}
-
 class PolarEndpointType:
     """Base class for modeling Polar endpoints."""
 
@@ -41,6 +21,36 @@ class PolarEndpointType:
         self.timestamp_name = timestamp_name
         self.list_method = list_method
         self.get_method = get_method
+
+ENDPOINTS = {
+    CONF_DAILY_ACTIVITY: PolarEndpointType(
+        'daily_activity',
+        'activity-log',
+        'created',
+        'list_activities',
+        'get_activity_summary'),
+    CONF_TRAINING_DATA: PolarEndpointType(
+        'training_data',
+        'exercises',
+        'start-time',
+        'list_exercises',
+        'get_exercise_summary'),
+    CONF_PHYSICAL_INFO: PolarEndpointType(
+        'physical_info',
+        'physical-informations',
+        'created',
+        'list_physical_infos',
+        'get_physical_info')}
+
+class PolarResource:
+    """Base class for modeling Polar data."""
+
+    def __init__(self, name, friendly_name, units, icon):
+        """Constructor."""
+        self.name = name
+        self.friendly_name = friendly_name
+        self.units = units
+        self.icon = icon
 
 RESOURCES = {
     CONF_DAILY_ACTIVITY: [
@@ -167,16 +177,10 @@ RESOURCES = {
             'L/min',
             None)]}
 
-RESOURCE_NAMES = {
-    endpoint: [ resource.name for resource in resources ]
+RESOURCES_BY_NAME = {
+    endpoint: { resource.name: resource for resource in resources }
         for endpoint, resources in RESOURCES.items() }
 
-class PolarResource:
-    """Base class for modeling Polar data."""
-
-    def __init__(self, name, friendly_name, units, icon):
-        """Constructor."""
-        self.name = name
-        self.friendly_name = friendly_name
-        self.units = units
-        self.icon = icon
+RESOURCE_NAMES = {
+    endpoint: resources.keys()
+        for endpoint, resources in RESOURCES_BY_NAME.items() }

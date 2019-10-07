@@ -4,12 +4,15 @@ __version__ = '0.0.1'
 import logging
 
 import voluptuous as vol
-import homeassistant.helpers.config_validation as cv
 
 from homeassistant import config_entries
-from .const import DOMAIN, CONF_CLIENT_ID, CONF_CLIENT_SECRET,
+from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
+import homeassistant.helpers.config_validation as cv
+
+from .const import (
+    DOMAIN, CONF_CLIENT_ID, CONF_CLIENT_SECRET,
     CONF_MONITORED_RESOURCES, CONF_DAILY_ACTIVITY, CONF_TRAINING_DATA,
-    CONF_PHYSICAL_INFO, RESOURCE_NAMES
+    CONF_PHYSICAL_INFO, RESOURCE_NAMES)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -24,10 +27,10 @@ CONFIG_SCHEMA = vol.Schema(
                     [vol.In(RESOURCE_NAMES[CONF_DAILY_ACTIVITY])]),
                 CONF_TRAINING_DATA: vol.All(
                     cv.ensure_list,
-                    [vol.In([RESOURCE_NAMES[CONF_TRAINING_DATA]])]),
+                    [vol.In(RESOURCE_NAMES[CONF_TRAINING_DATA])]),
                 CONF_PHYSICAL_INFO: vol.All(
                     cv.ensure_list,
-                    [vol.In([RESOURCE_NAMES[CONF_PHYSICAL_INFO]])])
+                    [vol.In(RESOURCE_NAMES[CONF_PHYSICAL_INFO])])
             }
         }
     },
@@ -41,6 +44,8 @@ async def async_setup(hass, config):
     hass.data[DOMAIN] = conf or {}
 
     if conf is not None:
+        _LOGGER.debug('Setting up Polar config flow from configuration data')
+
         hass.async_create_task(
             hass.config_entries.flow.async_init(
                 DOMAIN, context={"source": config_entries.SOURCE_IMPORT}, data=conf
@@ -52,6 +57,8 @@ async def async_setup(hass, config):
 
 async def async_setup_entry(hass, entry):
     """Set up Polar integration from a config entry."""
+    _LOGGER.debug('Setting up Polar integration')
+
     hass.async_create_task(
         hass.config_entries.async_forward_entry_setup(entry, SENSOR_DOMAIN)
     )
@@ -61,6 +68,8 @@ async def async_setup_entry(hass, entry):
 
 async def async_unload_entry(hass, entry):
     """Unload a config entry."""
+    _LOGGER.debug('Unloading Polar integration')
+
     await hass.config_entries.async_forward_entry_unload(entry, SENSOR_DOMAIN)
 
     return True

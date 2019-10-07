@@ -14,8 +14,9 @@ from homeassistant.components.http import HomeAssistantView
 
 from accesslink import AccessLink
 
-from .const import DOMAIN, CONF_CLIENT_ID, CONF_CLIENT_SECRET, CONF_USER_ID,
-    CONF_ACCESS_TOKEN, AUTH_CALLBACK_NAME, AUTH_CALLBACK_PATH
+from .const import (
+    DOMAIN, CONF_CLIENT_ID, CONF_CLIENT_SECRET, CONF_USER_ID,
+    CONF_ACCESS_TOKEN, AUTH_CALLBACK_NAME, AUTH_CALLBACK_PATH)
 
 _LOGGER = logging.getLogger(__name__)
 
