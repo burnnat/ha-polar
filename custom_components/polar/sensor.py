@@ -8,7 +8,8 @@ from homeassistant.helpers.restore_state import RestoreEntity
 from .const import (
     DOMAIN, CONF_CLIENT_ID, CONF_CLIENT_SECRET, CONF_USER_ID,
     CONF_ACCESS_TOKEN, CONF_MONITORED_RESOURCES, CONF_DAILY_ACTIVITY,
-    CONF_TRAINING_DATA, CONF_PHYSICAL_INFO, ENDPOINTS, RESOURCES_BY_NAME)
+    CONF_TRAINING_DATA, CONF_PHYSICAL_INFO, ENDPOINTS, RESOURCES_BY_NAME,
+    CONF_UNIT_SYSTEM)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,6 +22,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
     user_id = entry.data.get(CONF_USER_ID)
     access_token = entry.data.get(CONF_ACCESS_TOKEN)
+    unit_system = hass.data[DOMAIN].get(CONF_UNIT_SYSTEM)
 
     if resources_by_endpoint is not None:
         entities = []
@@ -29,13 +31,13 @@ async def async_setup_entry(hass, entry, async_add_entities):
             _LOGGER.debug('Setting up Polar entities for endpoint: %s', endpoint_name)
 
             endpoint = PolarEndpoint(accesslink, ENDPOINTS[endpoint_name], user_id, access_token)
-            add_resource_entities(entities, endpoint, resources)
+            add_resource_entities(entities, endpoint, resources, unit_system)
 
         async_add_entities(entities, update_before_add=False)
 
     return True
 
-def add_resource_entities(entities, endpoint, resources):
+def add_resource_entities(entities, endpoint, resources, system):
     endpoint_name = endpoint.name
     master = None
 
@@ -46,10 +48,10 @@ def add_resource_entities(entities, endpoint, resources):
 
         if master is None:
             _LOGGER.debug('Entity %s/%s is master sensor', endpoint_name, resource_name)
-            sensor = PolarMasterSensor(endpoint, resource)
+            sensor = PolarMasterSensor(endpoint, resource, system)
             master = sensor
         else:
-            sensor = PolarSensor(endpoint, resource)
+            sensor = PolarSensor(endpoint, resource, system)
             master.add_child(sensor)
         
         entities.append(sensor)
@@ -84,10 +86,11 @@ class PolarEndpoint:
 class PolarSensor(RestoreEntity):
     """Representation of a sensor."""
 
-    def __init__(self, endpoint, resource):
+    def __init__(self, endpoint, resource, system):
         """Initialize the sensor."""
         self._endpoint = endpoint
         self._resource = resource
+        self._system = system
         self._state = None
 
     @property
@@ -112,7 +115,7 @@ class PolarSensor(RestoreEntity):
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement of this entity, if any."""
-        return self._resource.units
+        return self._resource.units.unit(self._system)
 
     async def async_update_from_raw(self, raw):
         item = raw
@@ -120,6 +123,8 @@ class PolarSensor(RestoreEntity):
 
         for key in keys:
             item = item[key]
+
+        item = self._resource.units.parse(item, self._system)
 
         _LOGGER.debug('Setting state for resource %s/%s: %s', self._endpoint.name, self._resource.name, item)
         self._state = item
@@ -143,9 +148,9 @@ class PolarSensor(RestoreEntity):
 class PolarMasterSensor(PolarSensor):
     """Master sensor to coordinate update transactions to an Accesslink endpoint."""
 
-    def __init__(self, endpoint, resource):
+    def __init__(self, endpoint, resource, system):
         """Initialize the sensor."""
-        super().__init__(endpoint, resource)
+        super().__init__(endpoint, resource, system)
         self._children = []
 
     @property

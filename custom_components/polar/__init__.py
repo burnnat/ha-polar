@@ -10,7 +10,7 @@ from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
 import homeassistant.helpers.config_validation as cv
 
 from .const import (
-    DOMAIN, CONF_CLIENT_ID, CONF_CLIENT_SECRET,
+    DOMAIN, CONF_CLIENT_ID, CONF_CLIENT_SECRET, CONF_UNIT_SYSTEM,
     CONF_MONITORED_RESOURCES, CONF_DAILY_ACTIVITY, CONF_TRAINING_DATA,
     CONF_PHYSICAL_INFO, RESOURCE_NAMES)
 
@@ -21,6 +21,7 @@ CONFIG_SCHEMA = vol.Schema(
         DOMAIN: {
             CONF_CLIENT_ID: cv.string,
             CONF_CLIENT_SECRET: cv.string,
+            CONF_UNIT_SYSTEM: cv.unit_system,
             CONF_MONITORED_RESOURCES: {
                 CONF_DAILY_ACTIVITY: vol.All(
                     cv.ensure_list,
