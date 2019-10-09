@@ -57,6 +57,12 @@ class PolarConfigFlow(config_entries.ConfigFlow):
 
     async def async_step_import(self, user_input=None):
         _LOGGER.debug('Starting import config flow')
+
+        for entry in self._async_current_entries():
+            if CONF_ACCESS_TOKEN in entry.data:
+                _LOGGER.debug('Configured entry already exists, aborting flow.')
+                return self.async_abort(reason='already_configured')
+
         return await self.async_step_client(user_input)
 
     async def async_step_client(self, user_input=None):
