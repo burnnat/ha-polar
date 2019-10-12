@@ -27,4 +27,33 @@ Available Data Types
 polar:
     client_id: fd1b46a2-3e59-b7f4-d85c-a4237c4fb4ad
     client_secret: acd35eb0-51e8-1c6b-7bb9-f13a1b906ae6
+    unit_system: metric # Defaults to global unit_system if not specified
+    monitored_resources:
+        daily_activity:
+        - "calories"
+        - "duration"
+        - "active-calories"
+        - "active-steps"
+        training_data:
+        - "calories"
+        - "club-id"
+        - "club-name"
+        - "detailed-sport-info"
+        - "device"
+        - "distance"
+        - "duration"
+        - "has-route"
+        - "heart-rate/average"
+        - "heart-rate/maximum"
+        - "start-time"
+        - "sport"
+        - "training-load"
+        physical_info:
+        - "aerobic-threshold"
+        - "anaerobic-threshold"
+        - "height"
+        - "maximum-heart-rate"
+        - "resting-heart-rate"
+        - "vo2-max"
+        - "weight"
 ```
