@@ -9,20 +9,27 @@ from .const import (
     DOMAIN, CONF_CLIENT_ID, CONF_CLIENT_SECRET, CONF_USER_ID,
     CONF_ACCESS_TOKEN, CONF_MONITORED_RESOURCES, CONF_DAILY_ACTIVITY,
     CONF_TRAINING_DATA, CONF_PHYSICAL_INFO, ENDPOINTS, RESOURCES_BY_NAME,
-    CONF_UNIT_SYSTEM)
+    CONF_UNIT_SYSTEM, SYSTEM_METRIC, SYSTEM_IMPERIAL)
 
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up Polar from a config entry."""
-    resources_by_endpoint = hass.data[DOMAIN].get(CONF_MONITORED_RESOURCES)
+    config = hass.data[DOMAIN]
+    resources_by_endpoint = config.get(CONF_MONITORED_RESOURCES)
 
     accesslink = AccessLink(client_id=entry.data.get(CONF_CLIENT_ID),
                         client_secret=entry.data.get(CONF_CLIENT_SECRET))
 
     user_id = entry.data.get(CONF_USER_ID)
     access_token = entry.data.get(CONF_ACCESS_TOKEN)
-    unit_system = hass.data[DOMAIN].get(CONF_UNIT_SYSTEM)
+
+    if CONF_UNIT_SYSTEM in config:
+        unit_system = config.get(CONF_UNIT_SYSTEM)
+    elif hass.config.units.is_metric:
+        unit_system = SYSTEM_METRIC
+    else:
+        unit_system = SYSTEM_IMPERIAL
 
     if resources_by_endpoint is not None:
         entities = []
