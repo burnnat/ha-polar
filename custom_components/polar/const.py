@@ -73,15 +73,16 @@ class SimpleUnit:
 
 
 class ScaledUnit:
-    def __init__(self, units, conversions):
+    def __init__(self, units, conversions, precision):
         self._units = units
         self._conversions = conversions
+        self._precision = precision
 
     def unit(self, system):
         return self._units[system]
 
     def parse(self, raw, system):
-        return raw / self._conversions[system]
+        return format(raw / self._conversions[system], f".{self._precision}f")
 
 class TimestampUnit:
     def unit(self, system):
@@ -93,11 +94,11 @@ class TimestampUnit:
 
 class DurationUnit:
     def unit(self, system):
-        return 'mins'
+        return 'minutes'
 
     def parse(self, raw, system):
         value = isodate.parse_duration(raw)
-        return value.total_seconds() / 60
+        return format(value.total_seconds() / 60, '.0f')
 
 RESOURCES = {
     CONF_DAILY_ACTIVITY: [
@@ -147,7 +148,8 @@ RESOURCES = {
             'Distance',
             ScaledUnit(
                 { SYSTEM_IMPERIAL: 'mi', SYSTEM_METRIC: 'km' },
-                { SYSTEM_IMPERIAL: 1609.34, SYSTEM_METRIC: 1000 }),
+                { SYSTEM_IMPERIAL: 1609.34, SYSTEM_METRIC: 1000 },
+                2),
             'mdi:map-marker'),
         PolarResource(
             'heart-rate/average',
@@ -195,14 +197,16 @@ RESOURCES = {
             'Weight',
             ScaledUnit(
                 { SYSTEM_IMPERIAL: 'lbs', SYSTEM_METRIC: 'kg' },
-                { SYSTEM_IMPERIAL: 0.453592, SYSTEM_METRIC: 1 }),
+                { SYSTEM_IMPERIAL: 0.453592, SYSTEM_METRIC: 1 },
+                1),
             'mdi:human'),
         PolarResource(
             'height',
             'Height',
             ScaledUnit(
                 { SYSTEM_IMPERIAL: 'ft', SYSTEM_METRIC: 'm' },
-                { SYSTEM_IMPERIAL: 30.48, SYSTEM_METRIC: 100 }),
+                { SYSTEM_IMPERIAL: 30.48, SYSTEM_METRIC: 100 },
+                1),
             'mdi:human'),
         PolarResource(
             'maximum-heart-rate',
