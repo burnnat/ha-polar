@@ -1,5 +1,6 @@
 """Support for HDHomeRun devices."""
 import logging
+import datetime
 
 from accesslink import AccessLink
 
@@ -12,6 +13,8 @@ from .const import (
     CONF_UNIT_SYSTEM, SYSTEM_METRIC, SYSTEM_IMPERIAL)
 
 _LOGGER = logging.getLogger(__name__)
+
+SCAN_INTERVAL = datetime.timedelta(minutes=30)
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up Polar from a config entry."""
