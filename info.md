@@ -25,6 +25,8 @@ You must be registered with Polar Accesslink for API access. Login to https://ad
     - **Daily activity data**: Yes
     - **Physical information data**: Yes
 
+When finished, take note of the client ID and secret that were generated. You will need to include these in your configuration and will not be able to view them again later without regenerating.
+
 ## Configuration:
 ```
 polar:
