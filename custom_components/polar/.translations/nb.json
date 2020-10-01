@@ -1,0 +1,23 @@
+
+{
+  "config": {
+    "title": "Polar",
+    "step": {
+      "client": {
+        "title": "Polar Client",
+        "description": "Skriv inn din Polar Accesslink klient-ID og hemmelighet. Hvis du ikke har registrert klienten din ennå, kan du gå til [admin dashboard](https://admin.polaraccesslink.com/) å gjøre slik. Skriv inn '{callback_url}' som tilbakeringingsdomene og aktiver tilgang til alle datatyper.",
+        "data": {
+          "client_id": "Klient ID",
+          "client_secret": "Klienthemmelighet"
+        }
+      },
+      "oauth": {
+        "title": "Polar Autorisasjon",
+        "description": "Logg på med Polar-legitimasjonen din for å gi tilgang til Polar-kontoen din.",
+        "data": {}
+      }
+    },
+    "error": {},
+    "abort": {}
+  }
+}
